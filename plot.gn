@@ -1,0 +1,56 @@
+#!/usr/bin/gnuplot
+reset
+set term png enhanced font "Times-Roman, 18" size 960,640
+set logsc
+set format "10^{%T}"
+
+kpc = 3.086e21
+set key left Left
+set tics scale 1.5, 1
+
+# plot 1
+set output "tcool.png"
+set xlabel "r [kpc]"
+set ylabel "t_{cool} [Myr]"
+set xr [1:1e3]
+set mxtics 10
+set mytics 10
+p "avg_values.txt" u 1:2 w p pt 7 ps 1 lc rgb "green" ti "actual",\
+  "out.out" u ($1/kpc):2 w l lw 2 lc rgb "blue" ti "NL-fit",\
+  "out.out" u ($1/kpc):3 w l lw 2 lc rgb "red"  ti "Nulsen-fit"
+unset output
+
+# plot 2
+set output "tff.png"
+set xlabel "r [kpc]"
+set ylabel "t_{ff} [Myr]"
+set mxtics 10
+set mytics 10
+p "avg_values.txt" u 1:3 w p pt 7 ps 1 lc rgb "green" ti "actual",\
+  "out.out" u ($1/kpc):4 w l lw 2 lc rgb "blue" ti "NL-fit",\
+  "out.out" u ($1/kpc):5 w l lw 2 lc rgb "red"  ti "Nulsen-fit"
+unset output
+
+# plot 3
+set output "tcool_tff.png"
+set xlabel "r [kpc]"
+set ylabel "t_{cool}/t_{ff}"
+set mxtics 10
+set mytics 10
+ p "avg_values.txt" u 1:($2/$3) w p pt 7 ps 1 lc rgb "green" ti "actual",\
+  "out.out" u ($1/kpc):($2/$4) w l lw 2 lc rgb "blue" ti "NL-fit",\
+  "out.out" u ($1/kpc):($3/$5) w l lw 2 lc rgb "red"  ti "Nulsen-fit"
+unset output
+
+# plot 4
+set output "fit.png"
+set key right Left
+set xlabel "r [kpc]"
+set ylabel "P [dyne cm^{-2}]"
+set mxtics 10
+set mytics 10
+p "data.dat" u (($1+$2)/2.):($3*1.151/0.6*1.38e-16*$4*1.16e7) w p pt 7 lw 2 lc rgb "green" ti "Deprojected data",\
+  "nlfit.out" u 1:3 w l lw 2 lc rgb "blue" ti "NL-fit",\
+  "MC_fit_nulsen.out" u ($1/kpc):3 w l lw  2 lc rgb "red" ti "Nulsen-fit"
+unset output
+
